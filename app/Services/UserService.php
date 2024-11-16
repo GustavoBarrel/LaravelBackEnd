@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Carbon\Carbon;
 use App\Mail\UserCodeMail;
+use App\Models\User;
 use App\Models\UserTokens;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
@@ -35,12 +36,40 @@ class UserService
     public function create(Collection $request)
     {
         $token = $request->get('token');
-        dd($request);
-        // 1 coisa - > validar o token se tiver errado nem continua
-        // valida se não ja existe user com esse email
-        //
+        $email = $request->get('email');
 
+        $userToken = UserTokens::where('email', $email)->first();
+
+        if ($userToken && Hash::check($token, $userToken->token)) {
+           $user =  User::create([
+                'email'=>$email,
+                'email_verified_at'=> Carbon::now(),
+                'password'=>Hash::make($request->get('password')),
+                'name'=> $request->get('name'),
+            ]);
+
+            return $user;
+        }
+        return false;
     }
 
+    public function redefinirSenha(Collection $request)
+    {
+        $token = $request->get('token');
+        $email = $request->get('email');
+
+        $userToken = UserTokens::where('email', $email)->first();
+
+        if ($userToken && Hash::check($token, $userToken->token)) {
+            $user = User::where('email',$email)->first();
+
+            $user->update([
+                'password'=> $request->get('new_password'),
+            ]);
+
+             return $user;
+         }
+         return false;
+    }
 
 }
