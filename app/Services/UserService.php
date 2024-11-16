@@ -2,9 +2,10 @@
 
 namespace App\Services;
 
+use Carbon\Carbon;
 use App\Mail\UserCodeMail;
 use App\Models\UserTokens;
-use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
@@ -28,6 +29,16 @@ class UserService
             return true;
         }
         return false;
+
+    }
+
+    public function create(Collection $request)
+    {
+        $token = $request->get('token');
+        dd($request);
+        // 1 coisa - > validar o token se tiver errado nem continua
+        // valida se não ja existe user com esse email
+        //
 
     }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use Illuminate\Http\Request;
 use App\Services\UserService;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserStoreRequest;
 
 class UserController extends Controller
 {
@@ -32,7 +33,10 @@ class UserController extends Controller
 
     public function store(UserStoreRequest $request)
     {
-        // $token = $this->userService->create($request);
+        $validated = $request->validated();
 
+        $user = $this->userService->create(collect($validated));
+
+        return response()->json(['message'=>'Usuario criado com sucesso','data'=>$user],200);
     }
 }

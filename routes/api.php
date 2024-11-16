@@ -9,3 +9,5 @@ use App\Http\Controllers\User\UserController;
 // })->middleware('auth:sanctum');
 
 Route::post('/user/{email}/send-code', [UserController::class,'SendUserLoginValidationTokenByEmail']);
+Route::post('/user', [UserController::class,'store']);
+
